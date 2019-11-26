@@ -23,5 +23,18 @@ regrain time: 1.12s
 save to /root/python_color_transfer/imgs/house_display.png
 ```
 
+# Methods
+
+Let input image be $I$, reference image be $R$ and output image be $O$.
+
+Let $f_I(r, g, b), f_R(r, g, b)$ be probability density functions of $I$ and $O$. 
+
+- mean transfer
+$O=I-\textrm{mean}(I)+\textrm{mean}(R)$.
+
+- pdf transfer
+$O=t(I)$, where $t: R^3\rightarrow R^3$ is a continous mapping so that $f_{t(I)}(r, g, b) = f_R(r, g, b)$. 
+
+
 # References
 [Author's matlab implementation](https://github.com/frcs/colour-transfer)
