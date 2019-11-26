@@ -14,13 +14,13 @@ import numpy as np
 
 from python_color_transfer.src.utils import Rotations
 
-class PDFTransfer:
+class ColorTransfer:
     """ Methods for color transfer of images. """
 
     def __init__(self, n=300, eps=1e-6, m=0):
         """ Hyper parameters. 
         
-        Args:
+        Attributes:
             n: discretization num of distribution of image's pixels.
             m: num of random orthogonal rotation matrices.
             eps: prevents from zero dividing.
@@ -31,6 +31,21 @@ class PDFTransfer:
             self.rotation_matrices = Rotations.random_rotations(m)
         else:
             self.rotation_matrices = Rotations.optimal_rotations()
+    def mean_transfer(self, img_arr_in=None, img_arr_ref=None):
+        """ Adapt img_arr_in's mean to img_arr_ref's mean.
+
+        Args:
+            img_arr_in: bgr numpy array of input image.
+            img_arr_ref: bgr numpy array of reference image.
+        Returns:
+            img_arr_out: transfered bgr numpy array of input image.
+        """
+        mean_in = np.mean(img_arr_in, axis=(0, 1), keepdims=True)
+        mean_ref = np.mean(img_arr_ref, axis=(0, 1), keepdims=True)
+        img_arr_out = img_arr_in - mean_in + mean_ref
+        img_arr_out[img_arr_out < 0] = 0
+        img_arr_out[img_arr_out > 255] = 255
+        return img_arr_out.astype('uint8')
     def pdf_tranfer(self, img_arr_in=None, img_arr_ref=None):
         """ Apply probability density function transfer.
 
@@ -52,7 +67,7 @@ class PDFTransfer:
             rot_arr_ref = np.matmul(rotation_matrix, reshape_arr_ref)
             rot_arr_out = np.zeros(rot_arr_in.shape)
             for i in range(rot_arr_out.shape[0]):
-                rot_arr_out[i] = self.pdf_transfer_1d(rot_arr_in[i],
+                rot_arr_out[i] = self._pdf_transfer_1d(rot_arr_in[i],
                                                       rot_arr_ref[i])
             rot_delta_arr = rot_arr_out - rot_arr_in
             delta_arr = np.matmul(rotation_matrix.transpose(), rot_delta_arr) #np.linalg.solve(rotation_matrix, rot_delta_arr)
@@ -63,7 +78,7 @@ class PDFTransfer:
         reshape_arr_out = (255. * reshape_arr_in).astype('uint8')
         img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
         return img_arr_out
-    def pdf_transfer_1d(self, arr_in=None, arr_ref=None):
+    def _pdf_transfer_1d(self, arr_in=None, arr_ref=None):
         """ Apply 1-dim probability density function transfer.
 
         Args:
@@ -159,33 +174,37 @@ class Regrain:
 def demo():
     cur_dir = os.path.abspath(os.path.dirname(__file__))
     img_folder = os.path.join(cur_dir, 'imgs')
-    img_paths = [os.path.join(img_folder, 'scotland_house.png'),
-                 os.path.join(img_folder, 'house.jpeg')]
-    ref_paths = [os.path.join(img_folder, 'scotland_plain.png'),
-                 os.path.join(img_folder, 'hats.png')]
-    out_paths = [os.path.join(img_folder, 'scotland_display.png'),
-                 os.path.join(img_folder, 'house_display.png')]
+    img_names = ['scotland_house.png', 'house.jpeg', 'fallingwater.png']
+    ref_names = ['scotland_plain.png', 'hats.png', 'autumn.jpg']
+    out_names = ['scotland_display.png', 'house_display.png', 'fallingwater_display.png']
+    img_paths = [os.path.join(img_folder, x) for x in img_names]
+    ref_paths = [os.path.join(img_folder, x) for x in ref_names]
+    out_paths = [os.path.join(img_folder, x) for x in out_names]
+    # cls init
+    PT = ColorTransfer()
+    RG = Regrain()
 
     for img_path, ref_path, out_path in zip(img_paths, ref_paths, out_paths):
+        # read input img
         img_arr_in = cv2.imread(img_path)
         [h, w, c] = img_arr_in.shape
         print('{}: {}x{}x{}'.format(img_path, h, w, c))
-
+        # read reference img
         img_arr_ref = cv2.imread(ref_path)
         [h, w, c] = img_arr_ref.shape
         print('{}: {}x{}x{}'.format(ref_path, h, w, c))
-
-        PT = PDFTransfer()
+        # pdf transfer
         t0 = time.time()    
         img_arr_col = PT.pdf_tranfer(img_arr_in=img_arr_in, img_arr_ref=img_arr_ref)
         print('pdf transfer time: {:.2f}s'.format(time.time() - t0))
-
-        RG = Regrain()
+        # regrain
         t0 = time.time()    
         img_arr_reg = RG.regrain(img_arr_in=img_arr_in, img_arr_col=img_arr_col)
         print('regrain time: {:.2f}s'.format(time.time() - t0))
-
-        img_arr_out = np.concatenate((img_arr_in, img_arr_ref, img_arr_reg), axis=1)
+        # mean transfer
+        img_arr_mt = PT.mean_transfer(img_arr_in=img_arr_in, img_arr_ref=img_arr_ref)
+        # display
+        img_arr_out = np.concatenate((img_arr_in, img_arr_ref, img_arr_mt, img_arr_reg), axis=1)
         cv2.imwrite(out_path, img_arr_out)
         print('save to {}'.format(out_path))
 
