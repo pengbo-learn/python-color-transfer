@@ -35,6 +35,8 @@ $O=I-\textrm{mean}(I)+\textrm{mean}(R)$.
 - pdf transfer
 $O=t(I)$, where $t: R^3\rightarrow R^3$ is a continous mapping so that $f_{t(I)}(r, g, b) = f_R(r, g, b)$. 
 
+![enter image description here](https://lh3.googleusercontent.com/RzpCKcXkdmOUqXN3SAqYmvm2-SKCrbkNgBWvjLntGZPhJPOyreZDdE3efMlUX00AvkqKOUV-m4ou)
+
 
 # References
 [Author's matlab implementation](https://github.com/frcs/colour-transfer)
