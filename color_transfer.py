@@ -17,20 +17,21 @@ from src.utils import Rotations
 class ColorTransfer:
     """ Methods for color transfer of images. """
 
-    def __init__(self, n=300, eps=1e-6, m=0):
+    def __init__(self, n=300, eps=1e-6, m=6, c=3):
         """ Hyper parameters. 
         
         Attributes:
+            c: dim of rotation matrix, 3 for oridnary img.
             n: discretization num of distribution of image's pixels.
             m: num of random orthogonal rotation matrices.
             eps: prevents from zero dividing.
         """
         self.n = n
         self.eps = eps
-        if m > 0:
-            self.rotation_matrices = Rotations.random_rotations(m)
-        else:
+        if c == 3:
             self.rotation_matrices = Rotations.optimal_rotations()
+        else:
+            self.rotation_matrices = Rotations.random_rotations(m, c=c)
     def mean_transfer(self, img_arr_in=None, img_arr_ref=None):
         """ Adapt img_arr_in's mean to img_arr_ref's mean.
 
@@ -58,26 +59,39 @@ class ColorTransfer:
 
         # reshape (h, w, c) to (c, h*w)
         [h, w, c] = img_arr_in.shape
-        assert c == 3
-        reshape_arr_in = img_arr_in.reshape(-1, c).transpose() / 255.
-        reshape_arr_ref = img_arr_ref.reshape(-1, c).transpose() / 255.
+        reshape_arr_in = img_arr_in.reshape(-1, c).transpose()
+        reshape_arr_ref = img_arr_ref.reshape(-1, c).transpose()
+        reshape_arr_out = self.pdf_transfer_nd(arr_in=reshape_arr_in,
+                                               arr_ref=reshape_arr_ref)
+        img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
+        return img_arr_out
+    def pdf_transfer_nd(self, arr_in=None, arr_ref=None):
+        """ Apply n-dim probability density function transfer.
+
+        Args:
+            arr_in: shape=(n, x).
+            arr_ref: shape=(n, x).
+        Returns:
+            arr_out: shape=(n, x).
+        """
         # n times of 1d-pdf-transfer
+        arr_in = arr_in / 255.
+        arr_ref = arr_ref / 255.
         for rotation_matrix in self.rotation_matrices:
-            rot_arr_in = np.matmul(rotation_matrix, reshape_arr_in)
-            rot_arr_ref = np.matmul(rotation_matrix, reshape_arr_ref)
+            rot_arr_in = np.matmul(rotation_matrix, arr_in)
+            rot_arr_ref = np.matmul(rotation_matrix, arr_ref)
             rot_arr_out = np.zeros(rot_arr_in.shape)
             for i in range(rot_arr_out.shape[0]):
                 rot_arr_out[i] = self._pdf_transfer_1d(rot_arr_in[i],
                                                       rot_arr_ref[i])
             rot_delta_arr = rot_arr_out - rot_arr_in
             delta_arr = np.matmul(rotation_matrix.transpose(), rot_delta_arr) #np.linalg.solve(rotation_matrix, rot_delta_arr)
-            reshape_arr_in = delta_arr + reshape_arr_in
+            arr_in = delta_arr + arr_in
         # reshape (c, h*w) to (h, w, c)
-        reshape_arr_in[reshape_arr_in < 0] = 0
-        reshape_arr_in[reshape_arr_in > 1] = 1
-        reshape_arr_out = (255. * reshape_arr_in).astype('uint8')
-        img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
-        return img_arr_out
+        arr_in[arr_in < 0] = 0
+        arr_in[arr_in > 1] = 1
+        arr_out = (255. * arr_in).astype('uint8')
+        return arr_out
     def _pdf_transfer_1d(self, arr_in=None, arr_ref=None):
         """ Apply 1-dim probability density function transfer.
 
