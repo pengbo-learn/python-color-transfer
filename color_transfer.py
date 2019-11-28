@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-""" python implementation of N-Dimensional PDF Transfer and regraining post-process.
+""" Implementation of color transfer in python.
 
-Paper: 
+Papers: 
+    Color Transfer between Images. (2001)
     Automated colour grading using colour distribution transfer. (2007) 
-Author's Matlab Implementation:
+Referenced Implementations:
+    https://github.com/chia56028/Color-Transfer-between-Images
     https://github.com/frcs/colour-transfer
 """
 import os
