@@ -32,9 +32,24 @@ class ColorTransfer:
             self.rotation_matrices = Rotations.optimal_rotations()
         else:
             self.rotation_matrices = Rotations.random_rotations(m, c=c)
-    def mean_transfer(self, img_arr_in=None, img_arr_ref=None):
-        """ Adapt img_arr_in's mean to img_arr_ref's mean.
+    def lab_transfer(self, img_arr_in=None, img_arr_ref=None):
+        """ Convert img from rgb space to lab space, apply mean std transfer,
+        then convert back.
+        Args:
+            img_arr_in: bgr numpy array of input image.
+            img_arr_ref: bgr numpy array of reference image.
+        Returns:
+            img_arr_out: transfered bgr numpy array of input image.
+        """
+        lab_in = cv2.cvtColor(img_arr_in, cv2.COLOR_BGR2LAB)
+        lab_ref = cv2.cvtColor(img_arr_ref, cv2.COLOR_BGR2LAB)
+        lab_out = self.mean_std_transfer(img_arr_in=lab_in, img_arr_ref=lab_ref)
+        img_arr_out = cv2.cvtColor(lab_out, cv2.COLOR_LAB2BGR)
+        return img_arr_out
+    def mean_std_transfer(self, img_arr_in=None, img_arr_ref=None):
+        """ Adapt img_arr_in's (mean, std) to img_arr_ref's (mean, std).
 
+        img_o = (img_i - mean(img_i)) / std(img_i) * std(img_r) + mean(img_r).
         Args:
             img_arr_in: bgr numpy array of input image.
             img_arr_ref: bgr numpy array of reference image.
@@ -43,13 +58,17 @@ class ColorTransfer:
         """
         mean_in = np.mean(img_arr_in, axis=(0, 1), keepdims=True)
         mean_ref = np.mean(img_arr_ref, axis=(0, 1), keepdims=True)
-        img_arr_out = img_arr_in - mean_in + mean_ref
+        std_in = np.std(img_arr_in, axis=(0, 1), keepdims=True)
+        std_ref = np.std(img_arr_ref, axis=(0, 1), keepdims=True)
+        img_arr_out = (img_arr_in - mean_in) / std_in * std_ref + mean_ref
         img_arr_out[img_arr_out < 0] = 0
         img_arr_out[img_arr_out > 255] = 255
         return img_arr_out.astype('uint8')
     def pdf_tranfer(self, img_arr_in=None, img_arr_ref=None):
         """ Apply probability density function transfer.
 
+        img_o = t(img_i) so that f_{t(img_i)}(r, g, b) = f_{img_r}(r, g, b),
+        where f_{img}(r, g, b) is the probability density function of img's rgb values.
         Args:
             img_arr_in: bgr numpy array of input image.
             img_arr_ref: bgr numpy array of reference image.
@@ -84,6 +103,9 @@ class ColorTransfer:
             for i in range(rot_arr_out.shape[0]):
                 rot_arr_out[i] = self._pdf_transfer_1d(rot_arr_in[i],
                                                       rot_arr_ref[i])
+            #func = lambda x, n : self._pdf_transfer_1d(x[:n], x[n:])
+            #rot_arr = np.concatenate((rot_arr_in, rot_arr_ref), axis=1)
+            #rot_arr_out = np.apply_along_axis(func, 1, rot_arr, rot_arr_in.shape[1])
             rot_delta_arr = rot_arr_out - rot_arr_in
             delta_arr = np.matmul(rotation_matrix.transpose(), rot_delta_arr) #np.linalg.solve(rotation_matrix, rot_delta_arr)
             arr_in = delta_arr + arr_in
@@ -188,14 +210,14 @@ class Regrain:
 def demo():
     cur_dir = os.path.abspath(os.path.dirname(__file__))
     img_folder = os.path.join(cur_dir, 'imgs')
-    img_names = ['scotland_house.png', 'house.jpeg', 'fallingwater.png']
-    ref_names = ['scotland_plain.png', 'hats.png', 'autumn.jpg']
-    out_names = ['scotland_display.png', 'house_display.png', 'fallingwater_display.png']
+    img_names = ['scotland_house.png', 'house.jpeg', 'fallingwater.png', 'tower.jpeg']
+    ref_names = ['scotland_plain.png', 'hats.png', 'autumn.jpg', 'sunset.jpg']
+    out_names = ['scotland_display.png', 'house_display.png', 'fallingwater_display.png', 'tower_display.png']
     img_paths = [os.path.join(img_folder, x) for x in img_names]
     ref_paths = [os.path.join(img_folder, x) for x in ref_names]
     out_paths = [os.path.join(img_folder, x) for x in out_names]
     # cls init
-    PT = ColorTransfer()
+    PT = ColorTransfer(n=300)
     RG = Regrain()
 
     for img_path, ref_path, out_path in zip(img_paths, ref_paths, out_paths):
@@ -216,9 +238,15 @@ def demo():
         img_arr_reg = RG.regrain(img_arr_in=img_arr_in, img_arr_col=img_arr_col)
         print('regrain time: {:.2f}s'.format(time.time() - t0))
         # mean transfer
-        img_arr_mt = PT.mean_transfer(img_arr_in=img_arr_in, img_arr_ref=img_arr_ref)
+        t0 = time.time()    
+        img_arr_mt = PT.mean_std_transfer(img_arr_in=img_arr_in, img_arr_ref=img_arr_ref)
+        print('mean std transfer time: {:.2f}s'.format(time.time() - t0))
+        # lab transfer
+        t0 = time.time()    
+        img_arr_lt = PT.lab_transfer(img_arr_in=img_arr_in, img_arr_ref=img_arr_ref)
+        print('lab mean std transfer time: {:.2f}s'.format(time.time() - t0))
         # display
-        img_arr_out = np.concatenate((img_arr_in, img_arr_ref, img_arr_mt, img_arr_reg), axis=1)
+        img_arr_out = np.concatenate((img_arr_in, img_arr_ref, img_arr_mt, img_arr_lt, img_arr_reg), axis=1)
         cv2.imwrite(out_path, img_arr_out)
         print('save to {}'.format(out_path))
 
