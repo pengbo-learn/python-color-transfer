@@ -12,7 +12,7 @@ Referenced Implementations:
 import cv2
 import numpy as np
 
-from python_color_transfer.src.utils import Rotations
+from .src.utils import Rotations
 
 class ColorTransfer:
     """ Methods for color transfer of images. """
