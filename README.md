@@ -11,11 +11,11 @@ input img | reference img | mean std transfer | lab mean std transfer | pdf tran
 
 # Run
 ```bash
-# python color_transfer.py 
+# python demo.py 
 /root/python_color_transfer/imgs/scotland_house.png: 361x481x3
 /root/python_color_transfer/imgs/scotland_plain.png: 361x481x3
-pdf transfer time: 0.65s
-regrain time: 0.48s
+pdf transfer time: 0.67s
+regrain time: 0.49s
 mean std transfer time: 0.04s
 lab mean std transfer time: 0.22s
 save to /root/python_color_transfer/imgs/scotland_display.png
@@ -23,23 +23,23 @@ save to /root/python_color_transfer/imgs/scotland_display.png
 /root/python_color_transfer/imgs/house.jpeg: 512x768x3
 /root/python_color_transfer/imgs/hats.png: 512x768x3
 pdf transfer time: 1.47s
-regrain time: 1.11s
-mean std transfer time: 0.08s
+regrain time: 1.16s
+mean std transfer time: 0.09s
 lab mean std transfer time: 0.09s
 save to /root/python_color_transfer/imgs/house_display.png
 
 /root/python_color_transfer/imgs/fallingwater.png: 727x483x3
 /root/python_color_transfer/imgs/autumn.jpg: 727x1000x3
-pdf transfer time: 1.89s
-regrain time: 0.85s
+pdf transfer time: 1.87s
+regrain time: 0.87s
 mean std transfer time: 0.12s
 lab mean std transfer time: 0.11s
 save to /root/python_color_transfer/imgs/fallingwater_display.png
 
 /root/python_color_transfer/imgs/tower.jpeg: 743x1280x3
 /root/python_color_transfer/imgs/sunset.jpg: 743x1114x3
-pdf transfer time: 2.99s
-regrain time: 2.96s
+pdf transfer time: 2.95s
+regrain time: 2.83s
 mean std transfer time: 0.23s
 lab mean std transfer time: 0.21s
 save to /root/python_color_transfer/imgs/tower_display.png
