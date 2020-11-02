@@ -2,14 +2,24 @@
 
 Three methods of color transfer implemented in python.
 
-# Examples
+## Examples
 input img | reference img | mean std transfer | lab mean std transfer | pdf transfer + regrain
 ![img](imgs/house_display.png)
 ![img](imgs/tower_display.png)
 ![img](imgs/scotland_display.png)
 ![img](imgs/fallingwater_display.png)
 
-# Run
+## Environment
+- python3
+- install dependency by ```sh env.sh```.
+```bash
+# env.sh
+pip3 install opencv-python==4.4.0.44
+pip3 install numpy==1.19.3
+```
+    
+
+## Run
 ```bash
 # python demo.py 
 /root/python_color_transfer/imgs/scotland_house.png: 361x481x3
@@ -45,7 +55,7 @@ lab mean std transfer time: 0.21s
 save to /root/python_color_transfer/imgs/tower_display.png
 ```
 
-# Methods
+## Methods
 
 Let input image be I, reference image be R and output image be O.\
 Let f{I}(r, g, b), f{R}(r, g, b) be probability density functions of I and R's rgb values. 
@@ -67,7 +77,7 @@ Let f{I}(r, g, b), f{R}(r, g, b) be probability density functions of I and R's r
 
 
 
-# References
+## References
 - pdf transfer\
     [Automated colour grading using colour distribution transfer](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.458.7694&rep=rep1&type=pdf) by F. Pitie , A. Kokaram and R. Dahyot.\
     [Author's matlab implementation](https://github.com/frcs/colour-transfer)
