@@ -14,7 +14,7 @@ input img | reference img | mean std transfer | lab mean std transfer | pdf tran
 - install dependency by ```sh env.sh```.
 ```bash
 # env.sh
-pip3 install opencv-python==4.4.0.44
+pip3 install opencv-python==4.2.0.34
 pip3 install numpy==1.19.3
 ```
     
