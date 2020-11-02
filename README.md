@@ -9,6 +9,16 @@ input img | reference img | mean std transfer | lab mean std transfer | pdf tran
 ![img](imgs/scotland_display.png)
 ![img](imgs/fallingwater_display.png)
 
+## Clone
+- install git-lfs
+```bash
+yum install git-lfs
+```
+- clone
+```bash
+git clone https://github.com/pengbo-learn/python-color-transfer.git
+```
+
 ## Environment
 - python3
 - install dependency by ```sh env.sh```.
