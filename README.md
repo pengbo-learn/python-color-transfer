@@ -4,11 +4,10 @@ Three methods of color transfer implemented in python.
 
 ## Examples
 input img | reference img | mean std transfer | lab mean std transfer | pdf transfer + regrain
-#![img](imgs/house_display.png)
 ![img](https://raw.githubusercontent.com/pengbo-learn/python-color-transfer/master/imgs/house_display.png)
-![img](imgs/tower_display.png)
-![img](imgs/scotland_display.png)
-![img](imgs/fallingwater_display.png)
+![img](https://github.com/pengbo-learn/python-color-transfer/blob/master/imgs/tower_display.png?raw=true)
+![img](https://github.com/pengbo-learn/python-color-transfer/blob/master/imgs/scotland_display.png?raw=true)
+![img](https://github.com/pengbo-learn/python-color-transfer/blob/master/imgs/fallingwater_display.png?raw=true)
 
 ## Pip Wheels
 
