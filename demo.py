@@ -50,23 +50,23 @@ def demo():
         img_arr_reg = PT.pdf_tranfer(img_arr_in=img_arr_in,
                                      img_arr_ref=img_arr_ref,
                                      regrain=True)
-        print(f"pdf transfer time: {time.time() - t0:.2f}s")
+        print(f"Pdf transfer time: {time.time() - t0:.2f}s")
         # mean transfer
         t0 = time.time()
         img_arr_mt = PT.mean_std_transfer(img_arr_in=img_arr_in,
                                           img_arr_ref=img_arr_ref)
-        print(f"mean std transfer time: {time.time() - t0:.2f}s")
+        print(f"Mean std transfer time: {time.time() - t0:.2f}s")
         # lab transfer
         t0 = time.time()
         img_arr_lt = PT.lab_transfer(img_arr_in=img_arr_in,
                                      img_arr_ref=img_arr_ref)
-        print(f"lab mean std transfer time: {time.time() - t0:.2f}s")
+        print(f"Lab mean std transfer time: {time.time() - t0:.2f}s")
         # display
         img_arr_out = np.concatenate(
             (img_arr_in, img_arr_ref, img_arr_mt, img_arr_lt, img_arr_reg),
             axis=1)
         cv2.imwrite(out_path, img_arr_out)
-        print(f"save to {out_path}\n")
+        print(f"Saved to {out_path}\n")
 
 
 if __name__ == "__main__":
