@@ -9,12 +9,39 @@ input img | reference img | mean std transfer | lab mean std transfer | pdf tran
 ![img](imgs/scotland_display.png)
 ![img](imgs/fallingwater_display.png)
 
-## Clone
+## Pip Wheels
+
+### install
+```bash
+pip install python-color-transfer
+```
+
+### usage
+```bash
+from python_color_transfer.color_transfer import ColorTransfer
+PT = ColorTransfer()
+img_arr_in = cv2.imread(img_path)
+img_arr_ref = cv2.imread(ref_path)
+# pdf transfer
+img_arr_reg = PT.pdf_tranfer(img_arr_in=img_arr_in,
+                             img_arr_ref=img_arr_ref,
+                             regrain=True)
+# mean transfer
+img_arr_mt = PT.mean_std_transfer(img_arr_in=img_arr_in,
+                                  img_arr_ref=img_arr_ref)
+# lab transfer
+img_arr_lt = PT.lab_transfer(img_arr_in=img_arr_in,
+                             img_arr_ref=img_arr_ref)
+```
+
+## From source
+
+### Clone
 ```bash
 git clone https://github.com/pengbo-learn/python-color-transfer.git
 ```
 
-## Environment
+### Environment
 - python3
 - install dependency by ```sh env.sh```.
 ```bash
@@ -24,7 +51,7 @@ pip3 install numpy==1.19.3
 ```
     
 
-## Run
+### Run
 ```bash
 # python demo.py 
 /root/python_color_transfer/imgs/scotland_house.png: 361x481x3
