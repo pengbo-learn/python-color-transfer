@@ -1,9 +1,11 @@
 [tool.poetry]
 name = "python_color_transfer"
-version = "0.1.0"
+version = "0.1.0a"
 description = "Three methods of color transfer implemented in python."
 authors = ["pengbo-learn"]
 license = "MIT"
+readme = "README.md"
+include=['imgs']
 
 [tool.poetry.dependencies]
 python = "^3.6"
