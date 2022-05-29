@@ -17,21 +17,20 @@ from python_color_transfer.utils import Rotations
 class ColorTransfer:
     """ Methods for color transfer of images. """
 
-    def __init__(self, n=300, eps=1e-6, m=6, c=3):
+    def __init__(self, eps=1e-6, m=6, c=3):
         """Hyper parameters.
 
         Attributes:
             c: dim of rotation matrix, 3 for oridnary img.
-            n: discretization num of distribution of image's pixels.
             m: num of random orthogonal rotation matrices.
             eps: prevents from zero dividing.
         """
-        self.n = n
         self.eps = eps
         if c == 3:
             self.rotation_matrices = Rotations.optimal_rotations()
         else:
             self.rotation_matrices = Rotations.random_rotations(m, c=c)
+        self.RG = Regrain()
 
     def lab_transfer(self, img_arr_in=None, img_arr_ref=None):
         """Convert img from rgb space to lab space, apply mean std transfer,
@@ -68,7 +67,7 @@ class ColorTransfer:
         img_arr_out[img_arr_out > 255] = 255
         return img_arr_out.astype("uint8")
 
-    def pdf_tranfer(self, img_arr_in=None, img_arr_ref=None):
+    def pdf_tranfer(self, img_arr_in=None, img_arr_ref=None, regrain=False):
         """Apply probability density function transfer.
 
         img_o = t(img_i) so that f_{t(img_i)}(r, g, b) = f_{img_r}(r, g, b),
@@ -92,6 +91,9 @@ class ColorTransfer:
         reshape_arr_out[reshape_arr_out > 1] = 1
         reshape_arr_out = (255.0 * reshape_arr_out).astype("uint8")
         img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
+        if regrain:
+            img_arr_out = self.RG.regrain(img_arr_in=img_arr_in,
+                                          img_arr_col=img_arr_out)
         return img_arr_out
 
     def pdf_transfer_nd(self, arr_in=None, arr_ref=None, step_size=1):
@@ -123,12 +125,13 @@ class ColorTransfer:
             arr_out = step_size * delta_arr + arr_out
         return arr_out
 
-    def _pdf_transfer_1d(self, arr_in=None, arr_ref=None):
+    def _pdf_transfer_1d(self, arr_in=None, arr_ref=None, n=300):
         """Apply 1-dim probability density function transfer.
 
         Args:
             arr_in: 1d numpy input array.
             arr_ref: 1d numpy reference array.
+            n: discretization num of distribution of image's pixels.
         Returns:
             arr_out: transfered input array.
         """
@@ -138,7 +141,7 @@ class ColorTransfer:
         min_v = arr.min() - self.eps
         max_v = arr.max() + self.eps
         xs = np.array(
-            [min_v + (max_v - min_v) * i / self.n for i in range(self.n + 1)])
+            [min_v + (max_v - min_v) * i / n for i in range(n + 1)])
         hist_in, _ = np.histogram(arr_in, xs)
         hist_ref, _ = np.histogram(arr_ref, xs)
         xs = xs[:-1]

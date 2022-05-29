@@ -6,7 +6,7 @@ import time
 import cv2
 import numpy as np
 
-from python_color_transfer.color_transfer import ColorTransfer, Regrain
+from python_color_transfer.color_transfer import ColorTransfer
 
 
 def demo():
@@ -34,8 +34,7 @@ def demo():
     ref_paths = [os.path.join(img_folder, x) for x in ref_names]
     out_paths = [os.path.join(img_folder, x) for x in out_names]
     # cls init
-    PT = ColorTransfer(n=300)
-    RG = Regrain()
+    PT = ColorTransfer()
 
     for img_path, ref_path, out_path in zip(img_paths, ref_paths, out_paths):
         # read input img
@@ -48,14 +47,10 @@ def demo():
         print(f"{ref_path}: {h}x{w}x{c}")
         # pdf transfer
         t0 = time.time()
-        img_arr_col = PT.pdf_tranfer(img_arr_in=img_arr_in,
-                                     img_arr_ref=img_arr_ref)
+        img_arr_reg = PT.pdf_tranfer(img_arr_in=img_arr_in,
+                                     img_arr_ref=img_arr_ref,
+                                     regrain=True)
         print(f"pdf transfer time: {time.time() - t0:.2f}s")
-        # regrain
-        t0 = time.time()
-        img_arr_reg = RG.regrain(img_arr_in=img_arr_in,
-                                 img_arr_col=img_arr_col)
-        print(f"regrain time: {time.time() - t0:.2f}s")
         # mean transfer
         t0 = time.time()
         img_arr_mt = PT.mean_std_transfer(img_arr_in=img_arr_in,
