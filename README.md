@@ -19,16 +19,22 @@ pip install python-color-transfer
 ### usage
 ```bash
 from python_color_transfer.color_transfer import ColorTransfer
+
 PT = ColorTransfer()
+
+# input image and reference image
 img_arr_in = cv2.imread(img_path)
 img_arr_ref = cv2.imread(ref_path)
+
 # pdf transfer
 img_arr_reg = PT.pdf_tranfer(img_arr_in=img_arr_in,
                              img_arr_ref=img_arr_ref,
                              regrain=True)
+
 # mean transfer
 img_arr_mt = PT.mean_std_transfer(img_arr_in=img_arr_in,
                                   img_arr_ref=img_arr_ref)
+
 # lab transfer
 img_arr_lt = PT.lab_transfer(img_arr_in=img_arr_in,
                              img_arr_ref=img_arr_ref)
