@@ -48,9 +48,9 @@ def demo():
         print(f"{ref_path}: {h}x{w}x{c}")
         # pdf transfer
         t0 = time.time()
-        img_arr_reg = PT.pdf_tranfer(img_arr_in=img_arr_in,
-                                     img_arr_ref=img_arr_ref,
-                                     regrain=True)
+        img_arr_reg = PT.pdf_transfer(img_arr_in=img_arr_in,
+                                      img_arr_ref=img_arr_ref,
+                                      regrain=True)
         print(f"Pdf transfer time: {time.time() - t0:.2f}s")
         # mean transfer
         t0 = time.time()

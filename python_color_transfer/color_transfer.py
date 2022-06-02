@@ -67,7 +67,7 @@ class ColorTransfer:
         img_arr_out[img_arr_out > 255] = 255
         return img_arr_out.astype("uint8")
 
-    def pdf_tranfer(self, img_arr_in=None, img_arr_ref=None, regrain=False):
+    def pdf_transfer(self, img_arr_in=None, img_arr_ref=None, regrain=False):
         """Apply probability density function transfer.
 
         img_o = t(img_i) so that f_{t(img_i)}(r, g, b) = f_{img_r}(r, g, b),
@@ -150,7 +150,7 @@ class ColorTransfer:
         cum_ref = np.cumsum(hist_ref)
         d_in = cum_in / cum_in[-1]
         d_ref = cum_ref / cum_ref[-1]
-        # tranfer
+        # transfer
         t_d_in = np.interp(d_in, d_ref, xs)
         t_d_in[d_in <= d_ref[0]] = min_v
         t_d_in[d_in >= d_ref[-1]] = max_v
