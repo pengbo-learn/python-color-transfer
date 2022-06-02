@@ -33,6 +33,7 @@ def demo():
     img_paths = [os.path.join(img_folder, x) for x in img_names]
     ref_paths = [os.path.join(img_folder, x) for x in ref_names]
     out_paths = [os.path.join(img_folder, x) for x in out_names]
+
     # cls init
     PT = ColorTransfer()
 
