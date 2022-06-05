@@ -30,12 +30,11 @@ class Rotations:
     ''' generate orthogonal matrices for pdf transfer.'''
 
     @classmethod
-    def random_rotations(cls, m):
+    def random_rotations(cls, m, c=3):
         ''' Random rotation. '''
 
         assert m > 0
-        rotation_matrices = [np.array(
-            [[1, 0, 0], [0, 1, 0], [0, 0, 1]])]
+        rotation_matrices = [np.eye(c)]
         rotation_matrices.extend([np.matmul(rotation_matrices[0], rvs())
                                   for _ in range(m-1)])
         return rotation_matrices
