@@ -35,7 +35,7 @@ class Rotations:
 
         assert m > 0
         rotation_matrices = [np.eye(c)]
-        rotation_matrices.extend([np.matmul(rotation_matrices[0], rvs())
+        rotation_matrices.extend([np.matmul(rotation_matrices[0], rvs(dim=c))
                                   for _ in range(m-1)])
         return rotation_matrices
     @classmethod
