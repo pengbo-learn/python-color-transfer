@@ -88,10 +88,21 @@ class ColorTransfer:
             delta_arr = np.matmul(rotation_matrix.transpose(), rot_delta_arr) #np.linalg.solve(rotation_matrix, rot_delta_arr)
             arr_in = delta_arr + arr_in
         # reshape (c, h*w) to (h, w, c)
-        arr_in[arr_in < 0] = 0
-        arr_in[arr_in > 1] = 1
-        arr_out = (255. * arr_in).astype('uint8')
-        return arr_out
+        reshape_arr_in[reshape_arr_in < 0] = 0
+        reshape_arr_in[reshape_arr_in > 1] = 1
+        reshape_arr_out = (255. * reshape_arr_in).astype('uint8')
+        img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
+        return img_arr_out
+    def relight(self, vertices=None, textures=None, normals=None):
+        '''relight face textures. 
+        Implemention of 
+        Author's matlab code: 'https://github.com/AjayNandoriya/PortraitLightingTransferMTP.
+        
+        Args:
+            vertices: coordinates of vertices, shape=(n, 3)
+            textures: (r, g, b)s for vertices, shape=(n, 3)
+            normals: normal vectors of vertices, shape=(n, 3)
+        '''
     def _pdf_transfer_1d(self, arr_in=None, arr_ref=None):
         """ Apply 1-dim probability density function transfer.
 
