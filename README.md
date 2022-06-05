@@ -122,9 +122,9 @@ img_arr_ref = cv2.imread(ref_image)
 PT = ColorTransfer()
 
 # Pdf transfer
-img_arr_pdf_reg = PT.pdf_tranfer(img_arr_in=img_arr_in,
-                             img_arr_ref=img_arr_ref,
-                             regrain=True)
+img_arr_pdf_reg = PT.pdf_transfer(img_arr_in=img_arr_in,
+                                  img_arr_ref=img_arr_ref,
+                                  regrain=True)
 # Mean std transfer
 img_arr_mt = PT.mean_std_transfer(img_arr_in=img_arr_in,
                                   img_arr_ref=img_arr_ref)
