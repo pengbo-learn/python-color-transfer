@@ -60,10 +60,12 @@ Let f{I}(r, g, b), f{R}(r, g, b) be probability density functions of I and R's r
 
 # References
 - pdf transfer
+
     [*Automated colour grading using colour distribution transfer*](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.458.7694&rep=rep1&type=pdf) by F. Pitie , A. Kokaram and R. Dahyot.\
     [Author's matlab implementation](https://github.com/frcs/colour-transfer)
 
 - lab mean transfer
+
     [*Color Transfer between Images*](https://www.cs.tau.ac.il/~turkel/imagepapers/ColorTransfer.pdf) by Erik Reinhard, Michael Ashikhmin, Bruce Gooch and Peter Shirley.\
     [Open source's python implementation](https://github.com/chia56028/Color-Transfer-between-Images)
 
