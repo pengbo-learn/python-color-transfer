@@ -47,8 +47,7 @@ save to /root/python_color_transfer/imgs/tower_display.png
 
 # Methods
 
-Let input image be I, reference image be R and output image be O.
-
+Let input image be I, reference image be R and output image be O.\
 Let f{I}(r, g, b), f{R}(r, g, b) be probability density functions of I and R's rgb values. 
 
 - mean std transfer
@@ -57,10 +56,10 @@ Let f{I}(r, g, b), f{R}(r, g, b) be probability density functions of I and R's r
 
 - lab mean transfer
 
-    lI = rgb2lab(I),\
-    lR = rgb2lab(R),\
-    lO = (lI - mean(lI)) / std(lI) \* std(lR) + mean(lR),\
-    O = lab2rgb(lO).
+    I' = rgb2lab(I),\
+    R' = rgb2lab(R),\
+    O' = (I' - mean(I')) / std(I') \* std(R') + mean(R'),\
+    O = lab2rgb(O').
 
 - pdf transfer
 
@@ -70,11 +69,10 @@ Let f{I}(r, g, b), f{R}(r, g, b) be probability density functions of I and R's r
 
 # References
 - pdf transfer\
-    [*Automated colour grading using colour distribution transfer*](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.458.7694&rep=rep1&type=pdf) by F. Pitie , A. Kokaram and R. Dahyot.\
+    [Automated colour grading using colour distribution transfer](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.458.7694&rep=rep1&type=pdf) by F. Pitie , A. Kokaram and R. Dahyot.\
     [Author's matlab implementation](https://github.com/frcs/colour-transfer)
 
-- lab mean transfer
-
-    [*Color Transfer between Images*](https://www.cs.tau.ac.il/~turkel/imagepapers/ColorTransfer.pdf) by Erik Reinhard, Michael Ashikhmin, Bruce Gooch and Peter Shirley.\
+- lab mean transfer\
+    [Color Transfer between Images](https://www.cs.tau.ac.il/~turkel/imagepapers/ColorTransfer.pdf) by Erik Reinhard, Michael Ashikhmin, Bruce Gooch and Peter Shirley.\
     [Open source's python implementation](https://github.com/chia56028/Color-Transfer-between-Images)
 
