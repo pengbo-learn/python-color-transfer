@@ -86,13 +86,13 @@ class ColorTransfer:
                                                arr_ref=reshape_arr_ref)
         img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
         return img_arr_out
-    def pdf_transfer_nd(self, arr_in=None, arr_ref=None, lr=1):
+    def pdf_transfer_nd(self, arr_in=None, arr_ref=None, step_size=1):
         """ Apply n-dim probability density function transfer.
 
         Args:
             arr_in: shape=(n, x).
             arr_ref: shape=(n, x).
-            lr: arr = arr + lr * delta_arr.
+            step_size: arr = arr + step_size * delta_arr.
         Returns:
             arr_out: shape=(n, x).
         """
@@ -111,7 +111,7 @@ class ColorTransfer:
             #rot_arr_out = np.apply_along_axis(func, 1, rot_arr, rot_arr_in.shape[1])
             rot_delta_arr = rot_arr_out - rot_arr_in
             delta_arr = np.matmul(rotation_matrix.transpose(), rot_delta_arr) #np.linalg.solve(rotation_matrix, rot_delta_arr)
-            arr_in = lr*delta_arr + arr_in
+            arr_in = step_size*delta_arr + arr_in
         # reshape (c, h*w) to (h, w, c)
         reshape_arr_in[reshape_arr_in < 0] = 0
         reshape_arr_in[reshape_arr_in > 1] = 1
@@ -149,9 +149,10 @@ class ColorTransfer:
         return arr_out
 
 class Regrain:
-    def __init__(self):
+    def __init__(self, smoothness=1):
+        '''To understand the meaning of these params, refer to paper07.'''
         self.nbits = [4, 16, 32, 64, 64, 64]
-        self.smoothness = 1
+        self.smoothness = smoothness
         self.level = 0
     def regrain(self, img_arr_in=None, img_arr_col=None):
         '''keep gradient of img_arr_in and color of img_arr_col. '''
