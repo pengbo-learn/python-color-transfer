@@ -80,10 +80,15 @@ class ColorTransfer:
 
         # reshape (h, w, c) to (c, h*w)
         [h, w, c] = img_arr_in.shape
-        reshape_arr_in = img_arr_in.reshape(-1, c).transpose()
-        reshape_arr_ref = img_arr_ref.reshape(-1, c).transpose()
+        reshape_arr_in = img_arr_in.reshape(-1, c).transpose()/255.
+        reshape_arr_ref = img_arr_ref.reshape(-1, c).transpose()/255.
+        # pdf transfer
         reshape_arr_out = self.pdf_transfer_nd(arr_in=reshape_arr_in,
                                                arr_ref=reshape_arr_ref)
+        # reshape (c, h*w) to (h, w, c)
+        reshape_arr_out[reshape_arr_out < 0] = 0
+        reshape_arr_out[reshape_arr_out > 1] = 1
+        reshape_arr_out = (255. * reshape_arr_out).astype('uint8')
         img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
         return img_arr_out
     def pdf_transfer_nd(self, arr_in=None, arr_ref=None, step_size=1):
@@ -97,10 +102,9 @@ class ColorTransfer:
             arr_out: shape=(n, x).
         """
         # n times of 1d-pdf-transfer
-        arr_in = arr_in / 255.
-        arr_ref = arr_ref / 255.
+        arr_out = np.array(arr_in)
         for rotation_matrix in self.rotation_matrices:
-            rot_arr_in = np.matmul(rotation_matrix, arr_in)
+            rot_arr_in = np.matmul(rotation_matrix, arr_out)
             rot_arr_ref = np.matmul(rotation_matrix, arr_ref)
             rot_arr_out = np.zeros(rot_arr_in.shape)
             for i in range(rot_arr_out.shape[0]):
@@ -111,13 +115,8 @@ class ColorTransfer:
             #rot_arr_out = np.apply_along_axis(func, 1, rot_arr, rot_arr_in.shape[1])
             rot_delta_arr = rot_arr_out - rot_arr_in
             delta_arr = np.matmul(rotation_matrix.transpose(), rot_delta_arr) #np.linalg.solve(rotation_matrix, rot_delta_arr)
-            arr_in = step_size*delta_arr + arr_in
-        # reshape (c, h*w) to (h, w, c)
-        reshape_arr_in[reshape_arr_in < 0] = 0
-        reshape_arr_in[reshape_arr_in > 1] = 1
-        reshape_arr_out = (255. * reshape_arr_in).astype('uint8')
-        img_arr_out = reshape_arr_out.transpose().reshape(h, w, c)
-        return img_arr_out
+            arr_out = step_size*delta_arr + arr_out
+        return arr_out
     def _pdf_transfer_1d(self, arr_in=None, arr_ref=None):
         """ Apply 1-dim probability density function transfer.
 
@@ -253,7 +252,7 @@ def demo():
         # display
         img_arr_out = np.concatenate((img_arr_in, img_arr_ref, img_arr_mt, img_arr_lt, img_arr_reg), axis=1)
         cv2.imwrite(out_path, img_arr_out)
-        print('save to {}'.format(out_path))
+        print('save to {}\n'.format(out_path))
 
 
 

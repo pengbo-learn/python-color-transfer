@@ -11,28 +11,38 @@ input img | reference img | mean std transfer | lab mean std transfer | pdf tran
 
 # Run
 ```bash
-# python color_transfer.py && sz imgs/*display*
+# python color_transfer.py 
 /root/python_color_transfer/imgs/scotland_house.png: 361x481x3
 /root/python_color_transfer/imgs/scotland_plain.png: 361x481x3
 pdf transfer time: 0.65s
-regrain time: 0.47s
+regrain time: 0.48s
 mean std transfer time: 0.04s
-lab mean std transfer time: 0.23s
+lab mean std transfer time: 0.22s
 save to /root/python_color_transfer/imgs/scotland_display.png
+
 /root/python_color_transfer/imgs/house.jpeg: 512x768x3
 /root/python_color_transfer/imgs/hats.png: 512x768x3
-pdf transfer time: 1.42s
-regrain time: 1.10s
+pdf transfer time: 1.47s
+regrain time: 1.11s
 mean std transfer time: 0.08s
 lab mean std transfer time: 0.09s
 save to /root/python_color_transfer/imgs/house_display.png
+
 /root/python_color_transfer/imgs/fallingwater.png: 727x483x3
 /root/python_color_transfer/imgs/autumn.jpg: 727x1000x3
-pdf transfer time: 1.81s
+pdf transfer time: 1.89s
 regrain time: 0.85s
-mean std transfer time: 0.11s
+mean std transfer time: 0.12s
 lab mean std transfer time: 0.11s
 save to /root/python_color_transfer/imgs/fallingwater_display.png
+
+/root/python_color_transfer/imgs/tower.jpeg: 743x1280x3
+/root/python_color_transfer/imgs/sunset.jpg: 743x1114x3
+pdf transfer time: 2.99s
+regrain time: 2.96s
+mean std transfer time: 0.23s
+lab mean std transfer time: 0.21s
+save to /root/python_color_transfer/imgs/tower_display.png
 ```
 
 # Methods
@@ -59,8 +69,7 @@ Let f{I}(r, g, b), f{R}(r, g, b) be probability density functions of I and R's r
 
 
 # References
-- pdf transfer
-
+- pdf transfer\
     [*Automated colour grading using colour distribution transfer*](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.458.7694&rep=rep1&type=pdf) by F. Pitie , A. Kokaram and R. Dahyot.\
     [Author's matlab implementation](https://github.com/frcs/colour-transfer)
 
