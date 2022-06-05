@@ -12,7 +12,7 @@ import time
 import cv2
 import numpy as np
 
-from src.utils import Rotations
+from python_color_transfer.src.utils import Rotations
 
 class PDFTransfer:
     """ Methods for color transfer of images. """
@@ -178,15 +178,16 @@ def demo():
         PT = PDFTransfer()
         t0 = time.time()    
         img_arr_col = PT.pdf_tranfer(img_arr_in=img_arr_in, img_arr_ref=img_arr_ref)
-        print('pdf transfer: {:.2f}'.format(time.time() - t0))
+        print('pdf transfer time: {:.2f}s'.format(time.time() - t0))
 
         RG = Regrain()
         t0 = time.time()    
         img_arr_reg = RG.regrain(img_arr_in=img_arr_in, img_arr_col=img_arr_col)
-        print('regrain: {:.2f}'.format(time.time() - t0))
+        print('regrain time: {:.2f}s'.format(time.time() - t0))
 
         img_arr_out = np.concatenate((img_arr_in, img_arr_ref, img_arr_reg), axis=1)
         cv2.imwrite(out_path, img_arr_out)
+        print('save to {}'.format(out_path))
 
 
 
