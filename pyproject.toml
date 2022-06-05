@@ -6,7 +6,7 @@ authors = ["pengbo-learn"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 opencv-python = "^4.2"
 numpy = "^1.19"
 
