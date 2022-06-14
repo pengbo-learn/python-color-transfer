@@ -30,7 +30,7 @@ Let $f{I}(r, g, b)$, $f{R}(r, g, b)$ be probability density functions of $I$ and
 
 - **Pdf transfer**[^2]
 
-    $O = t(I)$, where $t: R^3-> R^3$ is a continous mapping so that $f{t(I)}(r, g, b) = f{R}(r, g, b)$. 
+    $O = t(I)$, where $t: R^3\rightarrow R^3$ is a continous mapping so that $f{t(I)}(r, g, b) = f{R}(r, g, b)$. 
 
 
 ## Requirements
